@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Editorial</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter (body) and Instrument Serif (logo - Google's new thin, modern serif) fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Instrument+Serif:wght@400&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Pure white background */
+            background-color: white; 
+            /* Lighter dark text color */
+            color: #444444; 
+        }
+
+        .logo-font {
+            font-family: 'Instrument Serif', serif;
+            font-weight: 400; 
+            /* Logo color is now slightly darker than the previous #777777 */
+            color: #555555; 
+            /* Letter spacing is removed from the logo font */
+        }
+        
+        .hero-bg {
+            background-color: #e0e0e0; 
+            background-image: url('hero.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+        .text-section {
+            max-width: 800px;
+        }
+        /* Style for standard navigation links in header (About) */
+        .header-link {
+            transition: opacity 0.2s;
+            position: relative;
+            font-weight: 300; 
+        }
+        .header-link:hover {
+            opacity: 0.6;
+        }
+
+        /* NEW Style for the JOIN button/input (filled black button with white text) */
+        .btn-primary {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 0.75rem 2.5rem; 
+            text-transform: uppercase;
+            font-weight: 500; 
+            letter-spacing: 0.2em; 
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            border-radius: 9999px; /* Fully rounded */
+            cursor: pointer; 
+            border: none; /* No border for the filled button */
+        }
+        .btn-primary:hover {
+            opacity: 0.85;
+            color: white; /* Ensure text remains white on hover */
+        }
+
+        /* Custom class for the content titles */
+        .content-title {
+            font-size: 2rem; 
+            font-weight: 300; 
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+        
+        /* Style for the email input field and its focus state */
+        .email-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 2rem; /* Increased margin for spacing */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 300;
+            transition: border-color 0.2s;
+        }
+        .email-input:focus {
+            outline: none; /* Remove default blue outline */
+            border-color: #1a1a1a; /* Black border on focus/active */
+            box-shadow: 0 0 0 1px #1a1a1a;
+        }
+
+        /* Fix scrolling issue where sticky header covers the target section title */
+        #about-section, #club-section {
+            scroll-margin-top: 100px; /* Offset for the sticky header */
+        }
+        
+        /* Loading/Response Styling */
+        #mc-response-container {
+            min-height: 4rem; /* Ensure space for the message */
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-10 bg-white border-b border-gray-100"> 
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+            <!-- Logo: Padel Editorial with Instrument Serif font and slightly darker color -->
+            <div class="text-4xl logo-font">Padel Editorial</div>
+            
+            <nav class="flex space-x-8 items-center text-lg font-light">
+                <!-- Navigation Links: About (first) and Join (second, button style) -->
+                <a href="#about-section" class="header-link">About</a>
+                
+                <!-- Instagram Icon (Link updated to padeleditorial) -->
+                <a href="http://instagram.com/padeleditorial" target="_blank" class="text-gray-500 hover:text-gray-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </a>
+                
+                <a href="#club-section" class="btn-primary py-2 px-6 text-sm">Join</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero-bg h-[70vh] w-full mb-48"> 
+            <div class="flex items-center justify-center h-full">
+                <!-- Placeholder for Hero Image -->
+            </div>
+        </section>
+
+        <!-- About/Introduction Section (The core text block) -->
+        <section id="about-section" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center"> 
+            <div class="text-section mx-auto">
+                <!-- Heading: ABOUT PADEL CURATED -> ABOUT PADEL EDITORIAL (UPDATED) -->
+                <h2 class="text-xl font-light mb-12 uppercase tracking-[0.3em] text-gray-400">ABOUT PADEL EDITORIAL</h2>
+                <!-- Main descriptive text (UPDATED) -->
+                <p class="text-4xl md:text-5xl font-light leading-snug">
+                    We curate the best of padel from exclusive events to premium brands and luxury destinations.
+                </p>
+            </div>
+        </section>
+
+        <!-- Image Gallery Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center">
+            <!-- Image Grid (Only 2 Vertical Images) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Placeholder 1: Vertical 2:3 Aspect Ratio -->
+                <div class="aspect-[2/3] bg-gray-200 rounded-lg shadow-inner" 
+                     style="background-image: url('image1.jpg'); background-size: cover; background-position: center;">
+                </div>
+                
+                <!-- Placeholder 2: Vertical 2:3 Aspect Ratio -->
+                <div class="aspect-[2/3] bg-gray-300 rounded-lg shadow-inner" 
+                     style="background-image: url('image2.jpg'); background-size: cover; background-position: center;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Join/CTA Section (Newsletter Form) -->
+        <section id="club-section" class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center pt-10">
+            <div class="text-section mx-auto">
+                <!-- Heading: MEMBERSHIP -->
+                <h2 class="text-xl font-light mb-12 uppercase tracking-[0.3em] text-gray-400">MEMBERSHIP</h2>
+                
+                <!-- UPDATED CTA text (early access) -->
+                <p class="text-2xl md:text-3xl font-light leading-snug mb-20">
+                    Request you digital membership and receive early access to premium padel gear, luxury destinations and exclusive events.
+                </p>
+            </div>
+            
+            <!-- Email Input Field and Button - MAILCHIMP JSONP INTEGRATION -->
+            <!-- We removed target="_blank" and added an onsubmit handler -->
+            <form action="https://gmail.us4.list-manage.com/subscribe/post?u=56be385da18df47b0867e43a2&amp;id=b12d8e99bd&amp;f_id=00ba6ceaf0" 
+                  method="post" 
+                  id="mc-embedded-subscribe-form" 
+                  name="mc-embedded-subscribe-form" 
+                  class="validate flex flex-col items-center" 
+                  onsubmit="subscribeToMailchimp(event)">
+                
+                <!-- IMPORTANT: The 'name' attribute MUST be 'EMAIL' for Mailchimp, and 'id' is required for validation script -->
+                <input type="email" 
+                       name="EMAIL" 
+                       id="mce-EMAIL" 
+                       placeholder="Enter your email address" 
+                       required 
+                       class="email-input max-w-sm">
+                
+                <!-- Mailchimp hidden field for bot prevention (REQUIRED) -->
+                <div aria-hidden="true" style="position: absolute; left: -5000px;">
+                    <input type="text" name="b_56be385da18df47b0867e43a2_b12d8e99bd" tabindex="-1" value="">
+                </div>
+
+                <!-- Button Text: JOIN FOR FREE -->
+                <button type="submit" 
+                        name="subscribe" 
+                        id="mc-embedded-subscribe" 
+                        class="btn-primary max-w-sm">
+                    JOIN FOR FREE
+                </button>
+            </form>
+            
+            <!-- Response Container -->
+            <div id="mc-response-container" class="max-w-sm mx-auto mt-4 text-sm">
+                <p id="mc-response-message" class="hidden text-center"></p>
+                <div id="mc-loading" class="hidden text-center text-gray-500">
+                    Subscribing...
+                </div>
+            </div>
+            
+            <!-- MAILCHIMP JSONP INTEGRATION END -->
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-100 py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center flex-col sm:flex-row text-sm font-light text-gray-500">
+            <!-- Footer Logo: Padel Editorial with Instrument Serif font (no tracking) -->
+            <div class="text-4xl logo-font mb-4 sm:mb-0">Padel Editorial</div>
+            <nav class="flex space-x-8 items-center mb-4 sm:mb-0 text-lg">
+                <!-- Footer Links -->
+                <a href="#about-section" class="hover:text-gray-700">About</a>
+                <a href="#club-section" class="hover:text-gray-700">Join</a>
+                <!-- Instagram Icon (Link updated to padeleditorial) -->
+                <a href="http://instagram.com/padeleditorial" target="_blank" class="text-gray-500 hover:text-gray-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </a>
+            </nav>
+            <div class="text-xs tracking-widest">
+                <!-- Copyright text updated to Padel Editorial -->
+                © 2026 Padel Editorial
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * Converts the form data into URL-encoded format suitable for Mailchimp submission.
+         * @param {FormData} formData 
+         * @returns {string} URL-encoded string
+         */
+        const serializeFormData = (formData) => {
+            const params = [];
+            for (const pair of formData.entries()) {
+                // Mailchimp requires URL encoding for both key and value
+                params.push(`${encodeURIComponent(pair[0])}=${encodeURIComponent(pair[1])}`);
+            }
+            return params.join('&');
+        };
+
+        /**
+         * Handles the Mailchimp form submission using dynamic script injection (JSONP).
+         * This is the most reliable way to bypass CORS when using Mailchimp's JSON endpoint.
+         * @param {Event} event - The form submission event.
+         */
+        async function subscribeToMailchimp(event) {
+            event.preventDefault(); // Stop default form submission and page reload
+
+            const form = event.target;
+            // Change the action URL to use Mailchimp's JSON endpoint
+            const url = form.action.replace('/post?', '/post-json?'); 
+            const formData = new FormData(form);
+            const serializedData = serializeFormData(formData);
+            
+            const responseMessageElement = document.getElementById('mc-response-message');
+            const loadingElement = document.getElementById('mc-loading');
+            const emailInput = document.getElementById('mce-EMAIL');
+            const submitButton = document.getElementById('mc-embedded-subscribe');
+
+            // --- Reset and Loading State ---
+            responseMessageElement.classList.add('hidden');
+            responseMessageElement.textContent = '';
+            loadingElement.classList.remove('hidden');
+            submitButton.disabled = true;
+
+            // 1. Generate a unique callback function name
+            // JSONP requires a temporary global function for the response
+            const callbackName = 'mcCallback_' + Date.now();
+            
+            try {
+                // 2. Wrap the JSONP logic in a Promise to handle the async call
+                const result = await new Promise((resolve, reject) => {
+                    
+                    // 3. Define the global callback function that Mailchimp will call
+                    window[callbackName] = (data) => {
+                        script.remove(); // Clean up the script tag
+                        delete window[callbackName]; // Clean up the global function
+                        resolve(data);
+                    };
+
+                    // 4. Construct the final URL with the unique callback name
+                    const finalUrl = `${url}&${serializedData}&c=${callbackName}`;
+
+                    // 5. Create and inject the script tag into the DOM head
+                    const script = document.createElement('script');
+                    script.src = finalUrl;
+                    document.head.appendChild(script);
+
+                    // Add a timeout fallback in case the request stalls
+                    setTimeout(() => {
+                        if (window[callbackName]) {
+                            script.remove(); 
+                            delete window[callbackName];
+                            reject(new Error('Subscription request timed out (10 seconds).'));
+                        }
+                    }, 10000); 
+
+                    // Script error handling (less reliable for cross-domain but good practice)
+                    script.onerror = () => {
+                        script.remove();
+                        delete window[callbackName];
+                        reject(new Error('Failed to load subscription service script.'));
+                    };
+                });
+
+                // 6. Process the result from the callback
+                if (result.result === 'success') {
+                    // UPDATED CONFIRMATION MESSAGE
+                    responseMessageElement.textContent = "Thank you for joining!";
+                    responseMessageElement.className = 'text-green-600 text-center p-3 rounded-lg bg-green-50';
+                    emailInput.value = ''; // Clear the input field on success
+                } else {
+                    // Extract the core error message (Mailchimp often prefixes it with 0 - text)
+                    const errorMsg = result.msg.replace(/^\d+\s-\s/, '');
+                    responseMessageElement.textContent = `Subscription failed: ${errorMsg}`;
+                    responseMessageElement.className = 'text-red-600 text-center p-3 rounded-lg bg-red-50';
+                }
+
+            } catch (error) {
+                console.error('Mailchimp Submission Error:', error);
+                // Provide a specific message for known error types
+                const userMessage = error.message.includes('timed out') || error.message.includes('Failed to load')
+                    ? 'Failed to connect to the subscription service. Please check your connection.'
+                    : 'An unexpected error occurred. Please try again.';
+                    
+                responseMessageElement.textContent = userMessage;
+                responseMessageElement.className = 'text-red-600 text-center p-3 rounded-lg bg-red-50';
+            } finally {
+                // --- Cleanup State ---
+                loadingElement.classList.add('hidden');
+                responseMessageElement.classList.remove('hidden');
+                submitButton.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
