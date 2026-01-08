@@ -165,11 +165,12 @@
         <!-- Contact Section -->
         <section id="contact-section" class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center pt-10">
             <div class="text-section mx-auto">
-                <!-- Heading: CONTACT -->
-                <h2 class="text-xl font-light mb-12 uppercase tracking-[0.3em] text-gray-400">CONTACT</h2>
+                <!-- Heading: CONTACT US -->
+                <h2 class="text-xl font-light mb-12 uppercase tracking-[0.3em] text-gray-400">CONTACT US</h2>
                 
+                <!-- Subtext -->
                 <p class="text-2xl md:text-3xl font-light leading-snug mb-20">
-                    Get in touch with the editorial team for press, partnership, or general inquiries.
+                    Get in touch with the editorial team for press, partnership or general inquiries.
                 </p>
             </div>
             
@@ -220,8 +221,8 @@
                 </p>
             </div>
             
-            <!-- Email Input Field and Button - MAILCHIMP JSONP INTEGRATION -->
-            <form action="https://gmail.us4.list-manage.com/subscribe/post?u=56be385da18df47b0867e43a2&amp;id=b12d8e99bd&amp;f_id=00ba6ceaf0" 
+            <!-- Email Input Field and Button - MAILCHIMP JSONP INTEGRATION (UPDATED) -->
+            <form action="https://gmail.us20.list-manage.com/subscribe/post?u=f43d4a911f339c3570217d8ae&id=af5e1aad59&f_id=007462eef0" 
                   method="post" 
                   id="mc-embedded-subscribe-form" 
                   name="mc-embedded-subscribe-form" 
@@ -236,9 +237,9 @@
                        required 
                        class="email-input max-w-sm">
                 
-                <!-- Mailchimp hidden field for bot prevention (REQUIRED) -->
+                <!-- Mailchimp hidden field for bot prevention (UPDATED) -->
                 <div aria-hidden="true" style="position: absolute; left: -5000px;">
-                    <input type="text" name="b_56be385da18df47b0867e43a2_b12d8e99bd" tabindex="-1" value="">
+                    <input type="text" name="b_f43d4a911f339c3570217d8ae_af5e1aad59" tabindex="-1" value="">
                 </div>
 
                 <!-- Button Text: JOIN FOR FREE -->
@@ -287,7 +288,7 @@
     </footer>
 
     <script>
-        // --- Mailchimp Subscription Logic (Unchanged) ---
+        // --- Mailchimp Subscription Logic (Unchanged in functionality, uses new URL) ---
         
         const serializeFormData = (formData) => {
             const params = [];
@@ -301,6 +302,7 @@
             event.preventDefault(); 
 
             const form = event.target;
+            // The JSONP conversion for Mailchimp is done here.
             const url = form.action.replace('/post?', '/post-json?'); 
             const formData = new FormData(form);
             const serializedData = serializeFormData(formData);
@@ -372,13 +374,11 @@
             }
         }
         
-        // --- Contact Form Logic (NEW SERVERLESS SUBMISSION) ---
-        // This endpoint will receive the form data and forward it to 'editorialpadel@gmail.com'
+        // --- Contact Form Logic (SERVERLESS SUBMISSION) ---
         const CONTACT_FORM_ENDPOINT = "https://formsubmit.co/ajax/editorialpadel@gmail.com"; 
         
         /**
          * Handles the Contact form submission asynchronously using the fetch API and a serverless endpoint.
-         * This provides a silent, direct submission experience with a 'Message Sent' confirmation.
          * @param {Event} event - The form submission event.
          */
         async function handleServerContactForm(event) {
@@ -412,17 +412,15 @@
                 
                 // Check if the submission was successful (HTTP status 200-299)
                 if (response.ok) {
-                    responseMessageElement.textContent = "Message Sent Successfully! The editorial team will be in touch shortly.";
+                    // Success message
+                    responseMessageElement.textContent = "Message Sent Successfully! We'll be in touch shortly.";
                     responseMessageElement.className = 'text-green-600 text-center p-3 rounded-lg bg-green-50';
                     form.reset();
                 } else {
-                    let errorText = "An error occurred while sending the message. Please check the console for details.";
+                    // General error handling
+                    let errorText = "An error occurred while sending the message. Please try again.";
                     
-                    // Note: FormSubmit requires the target email (editorialpadel@gmail.com) 
-                    // to be confirmed by the owner before it works.
-                    if (response.status === 422) {
-                        errorText = "Error: Submission blocked. Please check that the target email has been verified by the form service (FormSubmit).";
-                    } else if (response.status === 404) {
+                    if (response.status === 404) {
                         errorText = "Error: Submission endpoint not found or incorrect.";
                     }
                     
@@ -436,7 +434,7 @@
                 responseMessageElement.className = 'text-red-600 text-center p-3 rounded-lg bg-red-50';
             } finally {
                 submitButton.disabled = false;
-                // Hide success/error message after a delay (unless it's a persistent error)
+                // Hide success message after a delay
                 setTimeout(() => {
                     if (responseMessageElement.textContent.includes('Successfully')) {
                         responseMessageElement.classList.add('hidden');
