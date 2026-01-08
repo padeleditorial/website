@@ -112,7 +112,7 @@
             <div class="text-4xl logo-font">Padel Editorial</div>
             
             <nav class="flex space-x-8 items-center text-lg font-light">
-                <!-- Navigation Links: About, Contact (NEW), and Join (button style) -->
+                <!-- Navigation Links: About, Contact, and Join (button style) -->
                 <a href="#about-section" class="header-link">About</a>
                 <a href="#contact-section" class="header-link">Contact</a>
                 
@@ -173,10 +173,10 @@
                 </p>
             </div>
             
-            <!-- Contact Form now uses JavaScript handler -->
+            <!-- Contact Form now uses asynchronous submission via FormSubmit -->
             <form id="contact-form" 
                   class="flex flex-col items-center" 
-                  onsubmit="handleContactForm(event)">
+                  onsubmit="handleServerContactForm(event)">
                 
                 <input type="text" 
                        name="name" 
@@ -289,26 +289,16 @@
     <script>
         // --- Mailchimp Subscription Logic (Unchanged) ---
         
-        /**
-         * Converts the form data into URL-encoded format suitable for Mailchimp submission.
-         * @param {FormData} formData 
-         * @returns {string} URL-encoded string
-         */
         const serializeFormData = (formData) => {
             const params = [];
             for (const pair of formData.entries()) {
-                // Mailchimp requires URL encoding for both key and value
                 params.push(`${encodeURIComponent(pair[0])}=${encodeURIComponent(pair[1])}`);
             }
             return params.join('&');
         };
 
-        /**
-         * Handles the Mailchimp form submission using dynamic script injection (JSONP).
-         * @param {Event} event - The form submission event.
-         */
         async function subscribeToMailchimp(event) {
-            event.preventDefault(); // Stop default form submission and page reload
+            event.preventDefault(); 
 
             const form = event.target;
             const url = form.action.replace('/post?', '/post-json?'); 
@@ -320,7 +310,6 @@
             const emailInput = document.getElementById('mce-EMAIL');
             const submitButton = document.getElementById('mc-embedded-subscribe');
 
-            // --- Reset and Loading State ---
             responseMessageElement.classList.add('hidden');
             responseMessageElement.textContent = '';
             loadingElement.classList.remove('hidden');
@@ -332,8 +321,8 @@
                 const result = await new Promise((resolve, reject) => {
                     
                     window[callbackName] = (data) => {
-                        script.remove(); // Clean up the script tag
-                        delete window[callbackName]; // Clean up the global function
+                        script.remove(); 
+                        delete window[callbackName]; 
                         resolve(data);
                     };
 
@@ -383,92 +372,77 @@
             }
         }
         
-        // --- Contact Form Logic (Updated) ---
-        const CONTACT_EMAIL = "editorialpadel@gmail.com";
+        // --- Contact Form Logic (NEW SERVERLESS SUBMISSION) ---
+        // This endpoint will receive the form data and forward it to 'editorialpadel@gmail.com'
+        const CONTACT_FORM_ENDPOINT = "https://formsubmit.co/ajax/editorialpadel@gmail.com"; 
         
         /**
-         * Helper function to copy the email address to the clipboard.
-         */
-        function copyEmail() {
-            // Use execCommand('copy') as navigator.clipboard might be restricted in iframes
-            const tempInput = document.createElement('input');
-            tempInput.value = CONTACT_EMAIL;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            
-            const responseMessageElement = document.getElementById('contact-response-message');
-            
-            // Temporary success message
-            responseMessageElement.innerHTML = `Email address copied to clipboard!`;
-            responseMessageElement.className = 'text-green-600 text-center p-3 rounded-lg bg-green-50';
-            
-            // Restore the failure message after 2 seconds
-            setTimeout(() => {
-                 responseMessageElement.innerHTML = `
-                    <p class="text-sm">The automatic mailer failed (security restriction).<br>
-                    Please email us directly:</p>
-                    <span class="font-bold text-gray-800">${CONTACT_EMAIL}</span>
-                    <button onclick="copyEmail()" class="ml-2 px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded-full">Copy</button>
-                `;
-                responseMessageElement.className = 'text-red-600 text-center p-3 rounded-lg bg-red-50';
-            }, 2000); 
-        }
-
-        /**
-         * Handles the Contact form submission by opening the user's default email client (or failing gracefully).
-         * This uses JavaScript redirection which is more reliable than form action='mailto:'.
+         * Handles the Contact form submission asynchronously using the fetch API and a serverless endpoint.
+         * This provides a silent, direct submission experience with a 'Message Sent' confirmation.
          * @param {Event} event - The form submission event.
          */
-        function handleContactForm(event) {
-            event.preventDefault(); // Stop default form submission
+        async function handleServerContactForm(event) {
+            event.preventDefault(); 
 
             const form = event.target;
-            const name = form.elements.name.value;
-            const email = form.elements.email.value;
-            const message = form.elements.message.value;
+            const formData = new FormData(form);
+            
+            // Add required FormSubmit fields for better email formatting
+            formData.append('_replyto', form.elements.email.value); 
+            formData.append('_subject', `New Contact Inquiry from ${form.elements.name.value}`);
+            
             const responseMessageElement = document.getElementById('contact-response-message');
             const submitButton = form.querySelector('button[type="submit"]');
-            
-            // Simple validation check (required attributes in HTML also help)
-            if (!form.checkValidity()) {
-                // If validation failed, let the browser show its error messages
-                return;
-            }
 
-            // Construct the mailto: link
-            const subject = encodeURIComponent(`Contact Inquiry from ${name} (${email})`);
-            const body = encodeURIComponent(`Sender Name: ${name}\nSender Email: ${email}\n\n---\n\nMessage:\n${message}`);
-            const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-            
-            // --- Success attempt state ---
-            responseMessageElement.textContent = "Attempting to launch email client...";
-            responseMessageElement.className = 'text-gray-600 text-center p-3 rounded-lg bg-gray-50';
+            // --- State: Sending ---
+            responseMessageElement.textContent = "Sending message...";
+            responseMessageElement.className = 'text-gray-600 text-center p-3 rounded-lg bg-gray-100';
             responseMessageElement.classList.remove('hidden');
-            if (submitButton) {
-                submitButton.disabled = true;
-            }
+            submitButton.disabled = true;
 
-            // Use a short delay before redirection for the message to display
-            setTimeout(() => {
-                window.location.href = mailtoLink;
-            }, 50); 
-            
-            // --- Cleanup/Reset after successful attempt ---
-            setTimeout(() => {
-                // If we reach here, the mailto link was triggered. Reset the form.
-                form.reset();
-                responseMessageElement.classList.add('hidden');
-                if (submitButton) {
-                    submitButton.disabled = false;
+            try {
+                // Submit the form data asynchronously
+                const response = await fetch(CONTACT_FORM_ENDPOINT, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                // Check if the submission was successful (HTTP status 200-299)
+                if (response.ok) {
+                    responseMessageElement.textContent = "Message Sent Successfully! The editorial team will be in touch shortly.";
+                    responseMessageElement.className = 'text-green-600 text-center p-3 rounded-lg bg-green-50';
+                    form.reset();
+                } else {
+                    let errorText = "An error occurred while sending the message. Please check the console for details.";
+                    
+                    // Note: FormSubmit requires the target email (editorialpadel@gmail.com) 
+                    // to be confirmed by the owner before it works.
+                    if (response.status === 422) {
+                        errorText = "Error: Submission blocked. Please check that the target email has been verified by the form service (FormSubmit).";
+                    } else if (response.status === 404) {
+                        errorText = "Error: Submission endpoint not found or incorrect.";
+                    }
+                    
+                    responseMessageElement.textContent = errorText;
+                    responseMessageElement.className = 'text-red-600 text-center p-3 rounded-lg bg-red-50';
                 }
-            }, 5000); 
 
-            // IMPORTANT: If the browser blocks the mailto: (which is the "not secure" error), 
-            // the user will not see the success message for long, but they will have 
-            // the fallback option if they try again or refresh. Since we can't reliably detect 
-            // a blocked mailto, we must rely on the manual fallback.
+            } catch (error) {
+                console.error('Submission failed:', error);
+                responseMessageElement.textContent = "Network error: Could not reach the form sending service.";
+                responseMessageElement.className = 'text-red-600 text-center p-3 rounded-lg bg-red-50';
+            } finally {
+                submitButton.disabled = false;
+                // Hide success/error message after a delay (unless it's a persistent error)
+                setTimeout(() => {
+                    if (responseMessageElement.textContent.includes('Successfully')) {
+                        responseMessageElement.classList.add('hidden');
+                    }
+                }, 8000); 
+            }
         }
     </script>
 </body>
