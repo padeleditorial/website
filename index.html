@@ -74,7 +74,7 @@
         }
         
         /* Style for the email input field and its focus state */
-        .email-input {
+        .email-input, .contact-input {
             width: 100%;
             padding: 0.75rem 1rem;
             margin-bottom: 2rem; /* Increased margin for spacing */
@@ -83,20 +83,21 @@
             font-size: 1rem;
             font-weight: 300;
             transition: border-color 0.2s;
+            resize: none; /* For text areas */
         }
-        .email-input:focus {
+        .email-input:focus, .contact-input:focus {
             outline: none; /* Remove default blue outline */
             border-color: #1a1a1a; /* Black border on focus/active */
             box-shadow: 0 0 0 1px #1a1a1a;
         }
 
         /* Fix scrolling issue where sticky header covers the target section title */
-        #about-section, #club-section {
+        #about-section, #club-section, #contact-section {
             scroll-margin-top: 100px; /* Offset for the sticky header */
         }
         
         /* Loading/Response Styling */
-        #mc-response-container {
+        #mc-response-container, #contact-response-container {
             min-height: 4rem; /* Ensure space for the message */
             transition: all 0.3s ease-in-out;
         }
@@ -111,8 +112,9 @@
             <div class="text-4xl logo-font">Padel Editorial</div>
             
             <nav class="flex space-x-8 items-center text-lg font-light">
-                <!-- Navigation Links: About (first) and Join (second, button style) -->
+                <!-- Navigation Links: About, Contact, and Join (button style) -->
                 <a href="#about-section" class="header-link">About</a>
+                <a href="#contact-section" class="header-link">Contact</a>
                 
                 <!-- Instagram Icon (Link updated to padeleditorial) -->
                 <a href="http://instagram.com/padeleditorial" target="_blank" class="text-gray-500 hover:text-gray-700 transition">
@@ -135,9 +137,9 @@
         <!-- About/Introduction Section (The core text block) -->
         <section id="about-section" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center"> 
             <div class="text-section mx-auto">
-                <!-- Heading: ABOUT PADEL CURATED -> ABOUT PADEL EDITORIAL (UPDATED) -->
+                <!-- Heading: ABOUT PADEL EDITORIAL -->
                 <h2 class="text-xl font-light mb-12 uppercase tracking-[0.3em] text-gray-400">ABOUT PADEL EDITORIAL</h2>
-                <!-- Main descriptive text (UPDATED) -->
+                <!-- Main descriptive text -->
                 <p class="text-4xl md:text-5xl font-light leading-snug">
                     We curate the best of padel from exclusive events to premium brands and luxury destinations.
                 </p>
@@ -160,6 +162,57 @@
             </div>
         </section>
 
+        <!-- Contact Section -->
+        <section id="contact-section" class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center pt-10">
+            <div class="text-section mx-auto">
+                <!-- Heading: CONTACT -->
+                <h2 class="text-xl font-light mb-12 uppercase tracking-[0.3em] text-gray-400">CONTACT</h2>
+                
+                <p class="text-2xl md:text-3xl font-light leading-snug mb-20">
+                    Get in touch with the editorial team for press, partnership, or general inquiries.
+                </p>
+            </div>
+            
+            <!-- Contact Form using mailto: - Updated to use standard form submission -->
+            <!-- We use method="GET" and enctype="text/plain" which are common for mailto forms -->
+            <form action="mailto:editorialpadel@gmail.com" 
+                  method="GET" 
+                  enctype="text/plain" 
+                  id="contact-form" 
+                  class="flex flex-col items-center" 
+                  onsubmit="showContactSuccess(event)">
+                
+                <!-- Input names are capitalized to look better in the email subject/body -->
+                <input type="text" 
+                       name="Name" 
+                       placeholder="Your Name" 
+                       required 
+                       class="contact-input max-w-sm">
+
+                <input type="email" 
+                       name="Email" 
+                       placeholder="Your Email" 
+                       required 
+                       class="contact-input max-w-sm">
+
+                <textarea name="Message" 
+                          placeholder="Your Message" 
+                          required 
+                          rows="5"
+                          class="contact-input max-w-sm"></textarea>
+                
+                <button type="submit" class="btn-primary max-w-sm">
+                    SEND MESSAGE
+                </button>
+            </form>
+            
+            <!-- Response Container for Contact Form -->
+            <div id="contact-response-container" class="max-w-sm mx-auto mt-4 text-sm">
+                <p id="contact-response-message" class="hidden text-center"></p>
+            </div>
+        </section>
+
+
         <!-- Join/CTA Section (Newsletter Form) -->
         <section id="club-section" class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 mb-48 text-center pt-10">
             <div class="text-section mx-auto">
@@ -173,7 +226,6 @@
             </div>
             
             <!-- Email Input Field and Button - MAILCHIMP JSONP INTEGRATION -->
-            <!-- We removed target="_blank" and added an onsubmit handler -->
             <form action="https://gmail.us4.list-manage.com/subscribe/post?u=56be385da18df47b0867e43a2&amp;id=b12d8e99bd&amp;f_id=00ba6ceaf0" 
                   method="post" 
                   id="mc-embedded-subscribe-form" 
@@ -223,8 +275,9 @@
             <!-- Footer Logo: Padel Editorial with Instrument Serif font (no tracking) -->
             <div class="text-4xl logo-font mb-4 sm:mb-0">Padel Editorial</div>
             <nav class="flex space-x-8 items-center mb-4 sm:mb-0 text-lg">
-                <!-- Footer Links -->
+                <!-- Footer Links: Added Contact -->
                 <a href="#about-section" class="hover:text-gray-700">About</a>
+                <a href="#contact-section" class="hover:text-gray-700">Contact</a>
                 <a href="#club-section" class="hover:text-gray-700">Join</a>
                 <!-- Instagram Icon (Link updated to padeleditorial) -->
                 <a href="http://instagram.com/padeleditorial" target="_blank" class="text-gray-500 hover:text-gray-700 transition">
@@ -347,6 +400,46 @@
                 submitButton.disabled = false;
             }
         }
+
+        /**
+         * Handles the Contact form submission by providing feedback and allowing the mailto: action.
+         * @param {Event} event - The form submission event.
+         */
+        function showContactSuccess(event) {
+            // Since the form submission triggers mailto:, we can only provide a message
+            // BEFORE the email client attempts to open.
+            // The actual success depends on the user sending the email.
+            const responseMessageElement = document.getElementById('contact-response-message');
+            const submitButton = event.submitter;
+
+            // Prevent the success message from being shown if validation failed (though "required" handles most cases)
+            if (!event.target.checkValidity()) {
+                return;
+            }
+
+            if (submitButton) {
+                submitButton.disabled = true; // Disable button immediately to prevent double-click
+            }
+            
+            // Show message that the email client is opening
+            responseMessageElement.textContent = "Your email client is opening. Please send the message from there.";
+            responseMessageElement.className = 'text-gray-600 text-center p-3 rounded-lg bg-gray-50';
+            responseMessageElement.classList.remove('hidden');
+
+            // Reset state after a short delay (re-enable button, hide message, clear form)
+            setTimeout(() => {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                }
+                responseMessageElement.classList.add('hidden');
+                event.target.reset(); // Clear form fields
+            }, 5000); 
+            
+            // Note: The form submission itself (the mailto: action) is handled by the browser
+            // after this script finishes, as we did not use event.preventDefault().
+        }
+
+        // Removed the old handleContactForm function
     </script>
 </body>
 </html>
